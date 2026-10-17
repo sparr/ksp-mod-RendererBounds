@@ -99,6 +99,33 @@ the geometry is written against `Vector3`, `Matrix4x4`, and `Bounds`. Only
 managed members work outside Unity. `Matrix4x4.TRS` and `Quaternion.Euler` are
 implemented natively and throw, so the tests build rotation matrices by hand.
 
+In the game, compare `ShipConstruction.CalculateCraftSize` with
+`TightBounds.Enabled` set false and true on rotated parts. The tight size must
+never exceed the stock one for parts without skinned meshes.
+
+Parts spawned from code for that comparison, as in a survey of every part,
+must be brought up the way the editor does it, or the numbers measure the
+spawning instead of the mod:
+
+- Position the clone before activating it. Some components latch world
+  positions on activation: EVA Kerbals' right-arm bones stay where the prefab
+  was, and a skinned body baked from them reaches back to it.
+- Do not measure EVA Kerbals spawned outside flight. Their ragdoll bodies
+  (`Rigidbody` and `CharacterJoint` on the skeleton) are left active with no
+  animation driving them, so physics tears the skin apart and the tight size
+  comes out larger than stock. On EVA on the launchpad, the bodies are
+  inactive while animated and stay inside stock's box when ragdolled, and the
+  tight size is 25 to 40 percent under stock in both.
+- Put the part on layer 0 just before measuring, not only after spawning.
+  KSPCommunityFixes skips renderers on layer 1, where the editor keeps the
+  part being carried, and modules that build models in `OnStart` (ROLib's
+  ROSolar and others) create them on layer 1. The editor moves everything to
+  layer 0 when a part is dropped.
+- Measure near the origin. At 5000 m from it, float rounding adds 1 to 2 mm
+  to the tight size and makes it look larger than stock.
+- Give the test install's UnityExplorerMCP its own port and check which
+  install answers it. Two sessions both using 7193 drove each other's games.
+
 ## Version
 
 The version is written in two tracked files, `Version.props` and

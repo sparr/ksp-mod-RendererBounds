@@ -10,4 +10,6 @@ obj/
 *.user
 .vs/
 
+# Throwaway KSP install used by game tests
+/testenv/
 __pycache__/
