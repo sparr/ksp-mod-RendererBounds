@@ -17,6 +17,7 @@ NuGet package.
 - `RendererBounds.props.user` (ignored, copied from `RendererBounds.props.user.example`)
   holds the path to the local KSP install.
 - `install.sh` copies the built mod folder into a KSP install.
+- `test/RendererBounds.Tests/` is the unit tests. See Testing.
 - `netkan/RendererBounds.netkan` is the CKAN metadata to submit to `KSP-CKAN/NetKAN`.
   Once it is merged there, the copy upstream is the one that counts.
 - `.github/workflows/` uses `KSPBuildTools`, pinned to the same version as the
@@ -84,6 +85,19 @@ file name unless the `ModReference` sets `KSPAssemblyName`. Harmony needs
 `install.sh` writes each file under a temporary name and renames it into
 place, so it is safe to run while the game is running. The new build loads at
 the game's next start.
+
+## Testing
+
+`dotnet test test/RendererBounds.Tests` runs the unit tests, with no game. The test
+project targets the modern SDK and compiles the plugin's game-independent
+source files into itself, listed one by one in its csproj. Keep code that
+needs no game type in files of its own so that it can be listed there.
+
+Unlike the template, the test project references `UnityEngine.CoreModule.dll`
+from the game install, found the same way the main build finds the game, since
+the geometry is written against `Vector3`, `Matrix4x4`, and `Bounds`. Only
+managed members work outside Unity. `Matrix4x4.TRS` and `Quaternion.Euler` are
+implemented natively and throw, so the tests build rotation matrices by hand.
 
 ## Version
 

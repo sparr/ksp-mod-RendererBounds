@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Runs on the modern SDK, not on KSP's .NET 4.8, so game-independent
+         code can be tested without the game or Unity present. -->
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9</LangVersion>
+    <IsPackable>false</IsPackable>
+    <Nullable>disable</Nullable>
+    <AssemblyName>RendererBounds.Tests</AssemblyName>
+    <RootNamespace>RendererBounds.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <!--
+    The geometry code is written against UnityEngine's value types (Vector3,
+    Matrix4x4, Bounds), so the tests reference UnityEngine.CoreModule from the game
+    install the main build uses: RendererBounds.props.user, or KSP_ROOT. Only
+    managed members work outside Unity; anything implemented natively, such as
+    Matrix4x4.TRS or Quaternion.Euler, throws.
+  -->
+  <Import Project="$(RepoRoot)RendererBounds.props.user" Condition="Exists('$(RepoRoot)RendererBounds.props.user')" />
+  <PropertyGroup>
+    <KSPBT_GameRoot Condition=" '$(KSPBT_GameRoot)' == '' ">$(KSP_ROOT)</KSPBT_GameRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(KSPBT_GameRoot)/KSP_Data/Managed/UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <!-- The game-independent files of the mod are compiled straight into the
+       test assembly, one Compile item each. KSP-dependent files are left out. -->
+  <ItemGroup>
+    <Compile Include="../../src/RendererBounds/MeshHull.cs" Link="Mod/MeshHull.cs" />
+    <Compile Include="../../src/RendererBounds/ThirdParty/QuickHull3D/QuickHull3D/*.cs" LinkBase="Mod/QuickHull3D" />
+  </ItemGroup>
+</Project>

@@ -42,6 +42,8 @@ You need the [.NET SDK](https://dotnet.microsoft.com/download) (8 or later) and 
 
 The plugin is written to `GameData/RendererBounds/Plugins/`. Run `./install.sh` to copy the mod folder into the KSP install.
 
+`dotnet test test/RendererBounds.Tests` runs the unit tests.
+
 ## License
 
 MIT. See `LICENSE`.
