@@ -1,0 +1,25 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.cs'
+      - '**/*.csproj'
+      - '**/*.props'
+      - '.github/workflows/build.yml'
+  pull_request:
+    paths:
+      - '**/*.cs'
+      - '**/*.csproj'
+      - '**/*.props'
+      - '.github/workflows/build.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: KSPModdingLibs/KSPBuildTools/.github/workflows/build.yml@1.1.1
+    with:
+      solution-file-path: RendererBounds.sln
+      # The csproj has ModReference items with a CKANIdentifier (Harmony2).
+      use-ckan: true

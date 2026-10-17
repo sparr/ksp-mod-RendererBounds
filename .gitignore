@@ -1,0 +1,13 @@
+# Build output
+bin/
+obj/
+/GameData/*/Plugins/
+/GameData/*/LICENSE
+/GameData/*/THIRD-PARTY-NOTICES.md
+/GameData/*/README.md
+
+# Per-machine settings, including RendererBounds.props.user
+*.user
+.vs/
+
+__pycache__/
