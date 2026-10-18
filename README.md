@@ -12,9 +12,37 @@ Except that's still not true. The part's bounding box is calculated from the bou
 
 I created this mod because I was tired of 1.25m tanks making my craft 1.8-2.5m wide, so they wouldn't fit in my 2x2m LC, among many other less straightforward failure modes.
 
+## Why else?
+
+An ordinary mesh gets its box from its own vertices, so rotation is its only problem. A skinned mesh with joints and animations does not. Its bounding box is stored in the model file and used as is, regardless of the mesh pose. Some parts measure too small when deployed. Some read too large when undeployed. Some are always wrong, and some of those wildly so.
+
+With Renderer Bounds, a part's dimensions will always match its current pose. Some examples from a survey of a large RP-1 install, unrotated and stowed, largest dimension unless noted:
+
+| Part | Mod | Stock | Renderer Bounds |
+|---|---|---|---|
+| Communotron 88-88 (`commDish`) | Squad | 2.13 m | 1.28 m |
+| MG03 Fluxgate Magnetometer Boom | RP-1, ReStock model | 1.69 m | 0.80 m |
+| IKU-03 Kerbal Safety Bubble, height | VenStockRevamp | 3.83 m | 2.01 m |
+| Adjustable HIAD | ROHeatshields, ReStock model | 14.19 m | 2.66 m |
+| Blanket Solar Panel, ReStock Gigantor design | ROSolar | 8.68 m | 2.21 m |
+
+Some solar panels have baked in bounds tens to thousands of meters too large:
+
+| Blanket Solar Panel design | Stock | Renderer Bounds, retracted | Renderer Bounds, extended |
+|---|---|---|---|
+| ARM | 2,931 m | 7.90 m | 18.22 m |
+| BFS | 81.17 m | 0.92 m | 15.60 m |
+| DSG | 75.27 m | 4.91 m | 22.09 m |
+| DST | 71.68 m | 5.21 m | 26.34 m |
+| DRM | 69.71 m | 5.88 m | 30.29 m |
+| Starship | 30.93 m | 1.57 m | 6.98 m |
+| Orion | 6.28 m | 1.02 m | 1.89 m |
+
+In a few cases, like the extended BFS solar panel, Renderer Bounds accurately reports a larger size than the stock box.
+
 ## How?
 
-Renderer Bounds measures the part's renderers (effectively the meshes) from their actual vertices, using a convex hull of each mesh, so a rotated part measures its true extent. For an ordinary mesh that is never larger than before. A skinned mesh (ladders, parachutes, some solar panels) is measured from its current pose, which its stock bounding box can lag behind.
+Renderer Bounds measures the part's renderers (effectively the meshes) from their actual vertices, using a convex hull of each mesh, so a rotated part measures its true extent. For an ordinary mesh that is never larger than before. A skinned mesh (ladders, folding solar panels, etc) is measured from its current pose, which its stock bounding box can lag behind.
 
 It changes the bounds that every user of `PartGeometryUtil.GetPartRendererBounds` sees: craft size and the size limit checks, the Engineer's Report, cargo bay and inventory fit, and craft thumbnails.
 
