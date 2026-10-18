@@ -99,6 +99,12 @@ the geometry is written against `Vector3`, `Matrix4x4`, and `Bounds`. Only
 managed members work outside Unity. `Matrix4x4.TRS` and `Quaternion.Euler` are
 implemented natively and throw, so the tests build rotation matrices by hand.
 
+CI builds the test project but cannot run it. The KSPBuildTools workflows
+build against KSPLibs' reference zip, whose assemblies are stubs:
+`new Vector3(...)` throws `NullReferenceException` there. That zip has the
+Windows layout, so the compile action passes `KSPBT_ManagedPath`, and the test
+project honors it.
+
 In the game, compare `ShipConstruction.CalculateCraftSize` with
 `TightBounds.Enabled` set false and true on rotated parts. The tight size must
 never exceed the stock one for parts without skinned meshes.

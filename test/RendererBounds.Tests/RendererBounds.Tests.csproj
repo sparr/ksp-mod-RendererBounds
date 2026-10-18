@@ -13,13 +13,16 @@
   <!--
     The geometry code is written against UnityEngine's value types (Vector3,
     Matrix4x4, Bounds), so the tests reference UnityEngine.CoreModule from the game
-    install the main build uses: RendererBounds.props.user, or KSP_ROOT. Only
+    install the main build uses: RendererBounds.props.user, or KSP_ROOT. A
+    KSPBT_ManagedPath property overrides the Managed folder, as the KSPBuildTools
+    compile action does for its Windows-layout reference zip. Only
     managed members work outside Unity; anything implemented natively, such as
     Matrix4x4.TRS or Quaternion.Euler, throws.
   -->
   <Import Project="$(RepoRoot)RendererBounds.props.user" Condition="Exists('$(RepoRoot)RendererBounds.props.user')" />
   <PropertyGroup>
     <KSPBT_GameRoot Condition=" '$(KSPBT_GameRoot)' == '' ">$(KSP_ROOT)</KSPBT_GameRoot>
+    <KSPBT_ManagedPath Condition=" '$(KSPBT_ManagedPath)' == '' ">$(KSPBT_GameRoot)/KSP_Data/Managed</KSPBT_ManagedPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,7 +33,7 @@
 
   <ItemGroup>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(KSPBT_GameRoot)/KSP_Data/Managed/UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(KSPBT_ManagedPath)/UnityEngine.CoreModule.dll</HintPath>
     </Reference>
   </ItemGroup>
 
