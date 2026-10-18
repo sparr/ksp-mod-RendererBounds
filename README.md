@@ -2,6 +2,13 @@
 
 Measures craft size from part mesh geometry instead of inflated axis aligned renderer bounding boxes.
 
+## Screenshots
+
+![fuselage with and without rotation and mod](images/mk2-fuselage-rotated-45.png)
+![cylinder with and without rotation and mod](images/fl-t800-rotated-45.png)
+![solar panel with and without deployment and mod](images/rosolar-arm-blanket.png)
+![solar panel with and without deployment and mod](images/rosolar-dst-blanket.png)
+
 ## Why?
 
 KSP's craft size calculations use axis aligned bounding boxes around each part. This isn't a problem, since only the axis aligned dimensions are counted.
